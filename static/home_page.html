@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Home Page for Multiplayer Drawing Game</title>
+  </head>
+
+  <body>
+    <h1>Testing To See How WebSockets Work</h1>
+    <form action="" onsubmit="sendMessage(event)">
+      <label>Enter Text:</label>
+      <input type="text" name="userInput" id="userInput" />
+      <button>Submit</button>
+    </form>
+
+    <script>
+      const websocket = new WebSocket("ws://localhost:8000/ws");
+
+      function sendMessage(event) {
+        let userTextElement = document.getElementById("userInput");
+        let textData = userTextElement.value;
+        console.log(textData);
+        websocket.send(textData);
+        event.preventDefault();
+      }
+    </script>
+  </body>
+</html>

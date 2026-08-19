@@ -1,11 +1,12 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
+import os
 
 app = FastAPI()
 
 @app.get('/')
 async def home_page():
-    return
+    return HTMLResponse(os.path.join("static", "home-page.html"))
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -13,10 +14,11 @@ async def websocket_endpoint(websocket: WebSocket):
 
     while True:
         data = await websocket.receive_text()
-        await websocket.send_text(f"message received by user was {data}")
+        print(data)
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app,
-                host="0.0.0.0",
-                port=8000)
+    uvicorn.run("__main__:app",
+                host="localhost",
+                port=8000,
+                reload=True)

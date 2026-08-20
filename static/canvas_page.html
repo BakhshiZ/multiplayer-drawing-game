@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Canvas Page</title>
+  </head>
+
+  <body>
+    <canvas
+      width="800px"
+      height="400px"
+      id="drawingScreen"
+      style="border: 2px solid black"
+    />
+    <script>
+      const ws = new WebSocket("ws://localhost:8000/ws");
+      const canvas = document.getElementById("drawingScreen");
+      const ctx = canvas.getContext("2d");
+      let clicked = false;
+      let data = "";
+
+      document.addEventListener("mousemove", drawingFunction);
+
+      document.addEventListener("mousedown", function (event) {
+        clicked = true;
+      });
+
+      document.addEventListener("mouseup", function (event) {
+        clicked = false;
+      });
+
+      async function drawingFunction(event) {
+        if (!clicked) return;
+        if (!canvas.contains(event.target)) return;
+
+        let mouseX = event.clientX - 10;
+        let mouseY = event.clientY - 10;
+        ctx.fillRect(mouseX, mouseY, 10, 10);
+
+        if (!isOpen(ws)) return;
+        data = `${mouseX},${mouseY}`;
+        ws.send(data);
+      }
+
+      ws.onmessage = function (event) {
+        let receivedText = event.data;
+        let mouseX = 0;
+        let mouseY = 0;
+        let mouseCoords = [];
+
+        mouseCoords = receivedText.split(",");
+        mouseX = mouseCoords[0];
+        mouseY = mouseCoords[1];
+
+        ctx.fillRect(mouseX, mouseY, 10, 10);
+      };
+
+      function isOpen(ws) {
+        return ws.readyState === ws.OPEN;
+      }
+    </script>
+  </body>
+</html>

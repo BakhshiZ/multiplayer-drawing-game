@@ -5,7 +5,7 @@
   </head>
 
   <body>
-    <h1>Testing To See How WebSockets Work</h1>
+    <h1>Multiplayer Drawing Game</h1>
     <form action="" onsubmit="sendMessage(event)">
       <label>Enter Text:</label>
       <input type="text" name="userInput" id="userInput" />
@@ -22,6 +22,15 @@
         websocket.send(textData);
         event.preventDefault();
       }
+
+      websocket.onmessage = function (event) {
+        let messageLog = document.getElementById("userMessages");
+        const userMessage = document.createElement("li");
+        let userText = document.createTextNode(event.data);
+        userMessage.appendChild(userText);
+        messageLog.appendChild(userMessage);
+        // console.log(serverText);
+      };
     </script>
   </body>
 </html>

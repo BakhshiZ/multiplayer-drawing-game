@@ -22,7 +22,8 @@ connection_manager = ConnectionManager()
 
 @app.get("/")
 async def main_page():
-    return HTMLResponse(os.path.join("static", "canvas_page.html"))
+    with open(os.path.join("static", "canvas_page.html")) as f:
+        return HTMLResponse(f.read())
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

@@ -31,9 +31,8 @@ async def websocket_endpoint(websocket: WebSocket):
 
     try:
         while True:
-            data = await websocket.receive_text()
-            mouseX, mouseY = data.split(',')
-            await connection_manager.broadcast_message(f"{mouseX},{mouseY}")
+            mouse_coords = await websocket.receive_text()
+            await connection_manager.broadcast_message(mouse_coords)
 
     except WebSocketDisconnect:
         await connection_manager.broadcast_message("User has disconnected")
